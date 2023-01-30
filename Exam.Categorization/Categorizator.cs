@@ -29,10 +29,10 @@ namespace Exam.Categorization
                 }
             }
 
-            public List<Tree<T>> ChildrenOfNode()
-            {
-                return this.children;
-            }
+            //public List<Tree<T>> ChildrenOfNode()
+            //{
+            //    return this.children;
+            //}
 
 
             public void AddChild(T parentKey, Tree<T> child)
