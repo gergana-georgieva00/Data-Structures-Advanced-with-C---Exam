@@ -60,7 +60,23 @@ namespace Exam.Categorization
                 throw new ArgumentException();
             }
 
-            return (IEnumerable<Category>)categoriesById[categoryId].ChildrenOfNode();
+            LinkedList<Category> children = new LinkedList<Category>();
+
+            Queue<Category> currentCategories = new Queue<Category>();
+            currentCategories.Enqueue(this.categoriesById[categoryId]);
+
+            while (currentCategories.Count > 0)
+            {
+                Category current = currentCategories.Dequeue();
+
+                foreach (Category category in this.categoriesByParentId[current.Id].Values)
+                {
+                    children.AddLast(category);
+                    currentCategories.Enqueue(category);
+                }
+            }
+
+            return children;
         }
 
         public IEnumerable<Category> GetHierarchy(string categoryId)
