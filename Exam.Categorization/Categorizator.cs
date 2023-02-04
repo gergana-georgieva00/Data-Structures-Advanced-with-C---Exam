@@ -20,6 +20,8 @@ namespace Exam.Categorization
             }
 
             categoriesById.Add(category.Id, category);
+            categoriesByParentId.Add(category.Id, new Dictionary<string, Category>());
+            categoriesDepths.Add(category.Id, 0);
         }
 
         public void AssignParent(string childCategoryId, string parentCategoryId)
