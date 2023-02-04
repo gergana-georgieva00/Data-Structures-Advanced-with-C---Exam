@@ -100,9 +100,12 @@ namespace Exam.Categorization
         }
 
         public IEnumerable<Category> GetTop3CategoriesOrderedByDepthOfChildrenThenByName()
-        {
-            throw new NotImplementedException();
-        }
+            => this.categoriesById
+                .Values
+                .OrderByDescending(category => this.categoriesDepths[category.Id])
+                .ThenBy(category => category.Name)
+                .Take(3)
+                .ToList();
 
         public void RemoveCategory(string categoryId)
         {
@@ -112,7 +115,11 @@ namespace Exam.Categorization
             }
 
             this.categoriesById.Remove(categoryId);
-            if (this.parentsByCategoryId.ContainsKey(categoryId)) this.categoriesByParentId[this.parentsByCategoryId[categoryId]].Remove(categoryId);
+            if (this.parentsByCategoryId.ContainsKey(categoryId))
+            {
+                this.categoriesByParentId[this.parentsByCategoryId[categoryId]].Remove(categoryId);
+            }
+
             this.parentsByCategoryId.Remove(categoryId);
             List<string> categoryChildrenIds = this.categoriesByParentId[categoryId].Keys.ToList();
             categoryChildrenIds.ForEach(this.RemoveCategory);
