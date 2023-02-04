@@ -86,7 +86,17 @@ namespace Exam.Categorization
                 throw new ArgumentException();
             }
 
-            return tree.OrderDfs();
+            LinkedList<Category> hierarchy = new LinkedList<Category>();
+            hierarchy.AddLast(this.categoriesById[categoryId]);
+            string currentId = categoryId;
+
+            while (this.parentsByCategoryId.ContainsKey(currentId))
+            {
+                hierarchy.AddFirst(this.categoriesById[this.parentsByCategoryId[currentId]]);
+                currentId = this.parentsByCategoryId[currentId];
+            }
+
+            return hierarchy;
         }
 
         public IEnumerable<Category> GetTop3CategoriesOrderedByDepthOfChildrenThenByName()
