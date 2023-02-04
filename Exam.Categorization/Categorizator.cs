@@ -111,8 +111,13 @@ namespace Exam.Categorization
                 throw new ArgumentException();
             }
 
-            tree.RemoveNode(categoriesById[categoryId].value);
-            categoriesById.Remove(categoryId);
+            this.categoriesById.Remove(categoryId);
+            if (this.parentsByCategoryId.ContainsKey(categoryId)) this.categoriesByParentId[this.parentsByCategoryId[categoryId]].Remove(categoryId);
+            this.parentsByCategoryId.Remove(categoryId);
+            List<string> categoryChildrenIds = this.categoriesByParentId[categoryId].Keys.ToList();
+            categoryChildrenIds.ForEach(this.RemoveCategory);
+            this.categoriesByParentId.Remove(categoryId);
+            this.categoriesDepths.Remove(categoryId);
         }
 
         public int Size()
