@@ -26,17 +26,28 @@ namespace Exam.Categorization
 
         public void AssignParent(string childCategoryId, string parentCategoryId)
         {
-            if (!categoriesById.ContainsKey(parentCategoryId) || !categoriesById.ContainsKey(childCategoryId))
+            if (!categoriesById.ContainsKey(childCategoryId) || !categoriesById.ContainsKey(parentCategoryId))
+            {
+                throw new ArgumentException();
+            }
+            if (categoriesByParentId[parentCategoryId].ContainsKey(childCategoryId))
             {
                 throw new ArgumentException();
             }
 
-            if (categoriesById[parentCategoryId].ChildrenOfNode().Contains(categoriesById[childCategoryId]))
-            {
-                throw new ArgumentException();
-            }
+            var child = categoriesById[childCategoryId];
+            categoriesByParentId[parentCategoryId].Add(childCategoryId, child);
+            parentsByCategoryId.Add(childCategoryId, parentCategoryId);
 
-            tree.AddChild(categoriesById[parentCategoryId].value, (categoriesById[childCategoryId]));
+            string currentId = childCategoryId;
+            while (parentsByCategoryId.ContainsKey(currentId))
+            {
+                string parentId = parentsByCategoryId[currentId];
+                int currentDepth = this.categoriesDepths[currentId] + 1;
+                int parentDepth = this.categoriesDepths[parentId];
+                this.categoriesDepths[parentId] = Math.Max(currentDepth, parentDepth);
+                currentId = parentId;
+            }
         }
 
         public bool Contains(Category category)
